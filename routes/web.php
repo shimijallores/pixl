@@ -21,6 +21,20 @@ Route::get('/feed', function () {
                 'avatar' => '/images/michael.png',
                 'displayName' => 'Michael',
                 'handle' => '@mmich_jj',
+            ],
+            'replies' => [
+                [
+                    'postedDateTime' => '1h',
+                    'content' => "<p>Love you Lola!</p>",
+                    'likeCount' => 10,
+                    'replyCount' => 2,
+                    'repostCount' => 3,
+                    'profile' => [
+                        'avatar' => '/images/simon-chilling.png',
+                        'displayName' => 'Simon',
+                        'handle' => '@simonswiss',
+                    ],
+                ]
             ]
         ]
     ]));
@@ -43,6 +57,20 @@ Route::get('/profile', function () {
                 'avatar' => '/images/michael.png',
                 'displayName' => 'Michael',
                 'handle' => '@mmich_jj',
+            ],
+            'replies' => [
+                [
+                    'postedDateTime' => '1h',
+                    'content' => "<p>Love you Lola!</p>",
+                    'likeCount' => 10,
+                    'replyCount' => 2,
+                    'repostCount' => 3,
+                    'profile' => [
+                        'avatar' => '/images/simon-chilling.png',
+                        'displayName' => 'Simon',
+                        'handle' => '@simonswiss',
+                    ],
+                ]
             ]
         ]
     ]));
