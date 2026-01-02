@@ -33,6 +33,11 @@ class Post extends Model
         return $this->hasMany(Post::class, 'parent_id');
     }
 
+    public function reposts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'repost_of_id');
+    }
+
     public function likes(): hasMany
     {
         return $this->hasMany(Like::class);

@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Post;
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,34 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'profile_id' => Profile::factory(),
+            'parent_id' => null,
+            'repost_of_id' => null,
+            'content' => $this->faker->realText(200),
         ];
+    }
+
+    public function reply(Post $parentPost): PostFactory|Factory
+    {
+        return $this->state([
+            'parent_id' => $parentPost->id,
+            'content' => $this->faker->realText(200),
+        ]);
+    }
+
+    public function repost(Post $originalPost): PostFactory|Factory
+    {
+        return $this->state([
+            'repost_of_id' => $originalPost->id,
+            'content' => null,
+        ]);
+    }
+
+    public function quotePost(Post $originalPost): PostFactory|Factory
+    {
+        return $this->state([
+            'repost_of_id' => $originalPost->id,
+            'content' => $this->faker->realText(200),
+        ]);
     }
 }
