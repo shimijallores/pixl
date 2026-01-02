@@ -42,4 +42,14 @@ class Post extends Model
     {
         return $this->hasMany(Like::class);
     }
+
+    public static function publish(Profile $profile, string $content): self
+    {
+        return static::create([
+            'profile_id' => $profile->id,
+            'content' => $content,
+            'parent_id' => null,
+            'repost_of_id' => null,
+        ]);
+    }
 }
