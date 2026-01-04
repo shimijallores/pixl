@@ -13,14 +13,15 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-      'profile_id',
-      'parent_id',
-      'content',
+        'profile_id',
+        'parent_id',
+        'repost_of_id',
+        'content',
     ];
 
     public function profile(): BelongsTo
     {
-       return $this->belongsTo(Profile::class);
+        return $this->belongsTo(Profile::class);
     }
 
     public function parent(): BelongsTo
@@ -38,7 +39,12 @@ class Post extends Model
         return $this->hasMany(Post::class, 'repost_of_id');
     }
 
-    public function likes(): hasMany
+    public function repostOf(): BelongsTo
+    {
+        return $this->belongsTo(Post::class, 'repost_of_id');
+    }
+
+    public function likes(): HasMany
     {
         return $this->hasMany(Like::class);
     }
@@ -50,6 +56,26 @@ class Post extends Model
             'content' => $content,
             'parent_id' => null,
             'repost_of_id' => null,
+        ]);
+    }
+
+    public static function reply(Profile $replier, Post $original, $content): self
+    {
+        return static::create([
+            'profile_id' => $replier->id,
+            'content' => $content,
+            'parent_id' => $original->id,
+            'repost_of_id' => null,
+        ]);
+    }
+
+    public static function repost(Profile $reposter, Post $original, string $content = null): self
+    {
+        return static::create([
+            'profile_id' => $reposter->id,
+            'content' => $content,
+            'parent_id' => null,
+            'repost_of_id' => $original->id,
         ]);
     }
 }

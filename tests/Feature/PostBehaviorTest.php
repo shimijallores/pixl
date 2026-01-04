@@ -16,3 +16,55 @@ test('allows a profile to publish a post', function () {
         ->and($post->parent_id)->toBeNull()
         ->and($post->reply_of_id)->toBeNull();
 });
+
+test('can reply to post', function () {
+    $original = Post::factory()->create();
+
+    $replier = Profile::factory()->create();
+    $reply = Post::reply($replier, $original, 'reply content');
+
+    expect($reply->parent->is($original))->toBeTrue()
+        ->and($original->replies)->toHaveCount(1);
+});
+
+test('can have many replies', function () {
+    $original = Post::factory()->create();
+    $replies = Post::factory(5)->reply($original)->create();
+
+    expect($replies->first()->parent->is($original))->toBeTrue()
+        ->and($original->replies)->toHaveCount(5)
+        ->and($original->replies->contains($replies->first()))->toBeTrue();
+});
+
+test('create basic repost', function () {
+    $original = Post::factory()->create();
+
+    $reposter = Profile::factory()->create();
+    $repost = Post::repost($reposter, $original);
+
+    expect($repost->repostOf->is($original))->toBeTrue()
+        ->and($original->reposts)->toHaveCount(1)
+        ->and($repost->content)->toBeNull();
+});
+
+test('create quote repost', function () {
+    $original = Post::factory()->create();
+    $content = 'content';
+
+    $reposter = Profile::factory()->create();
+    $repost = Post::repost($reposter, $original, $content);
+
+    expect($repost->repostOf->is($original))->toBeTrue()
+        ->and($original->reposts)->toHaveCount(1)
+        ->and($repost->content)->toBe('content');
+});
+
+
+test('can have many reposts', function () {
+    $original = Post::factory()->create();
+    $reposts = Post::factory(5)->repost($original)->create();
+
+    expect($reposts->first()->repostOf  ->is($original))->toBeTrue()
+        ->and($original->reposts)->toHaveCount(5)
+        ->and($original->reposts->contains($reposts->first()))->toBeTrue();
+});
