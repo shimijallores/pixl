@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class Post extends Model
 {
@@ -71,11 +72,18 @@ class Post extends Model
 
     public static function repost(Profile $reposter, Post $original, string $content = null): self
     {
-        return static::create([
+        return static::firstOrCreate([
             'profile_id' => $reposter->id,
             'content' => $content,
             'parent_id' => null,
             'repost_of_id' => $original->id,
         ]);
+    }
+
+    public static function removeRepost(Profile $profile, Post $original): bool
+    {
+        return static::where('profile_id', $profile->id)
+            ->where('repost_of_id', $original->id)
+            ->delete() > 0;
     }
 }

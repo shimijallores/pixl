@@ -64,7 +64,29 @@ test('can have many reposts', function () {
     $original = Post::factory()->create();
     $reposts = Post::factory(5)->repost($original)->create();
 
-    expect($reposts->first()->repostOf  ->is($original))->toBeTrue()
+    expect($reposts->first()->repostOf->is($original))->toBeTrue()
         ->and($original->reposts)->toHaveCount(5)
         ->and($original->reposts->contains($reposts->first()))->toBeTrue();
 });
+
+test('prevent duplicate repost', function () {
+   $original = Post::factory()->create();
+   $profile = Profile::factory()->create();
+
+   $r1 = Post::repost($profile, $original);
+   $r2 = Post::repost($profile, $original);
+
+   expect($r1->id)->toBe($r2->id);
+});
+
+test('remove a repost', function () {
+    $original = Post::factory()->create();
+    $profile = Post::factory()->repost($original)->create()->profile;
+
+    $success = Post::removeRepost($profile, $original);
+
+    expect($original->reposts)->toHaveCount(0)
+        ->and($success)->toBeTrue();
+
+});
+
