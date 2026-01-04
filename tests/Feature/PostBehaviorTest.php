@@ -79,7 +79,7 @@ test('prevent duplicate repost', function () {
    expect($r1->id)->toBe($r2->id);
 });
 
-test('remove a repost', function () {
+test('can remove a repost', function () {
     $original = Post::factory()->create();
     $profile = Post::factory()->repost($original)->create()->profile;
 
