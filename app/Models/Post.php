@@ -70,6 +70,11 @@ class Post extends Model
         ]);
     }
 
+    public function isRepost(): bool
+    {
+        return $this->repost_of_id !== null;
+    }
+
     public static function repost(Profile $reposter, Post $original, string $content = null): self
     {
         return static::firstOrCreate([
