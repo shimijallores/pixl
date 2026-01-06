@@ -1,4 +1,4 @@
-<x-layout  title="PIXL - Profile">
+<x-layout  title="PIXL - Replies">
     <!-- Navigation -->
     @include('partials.navigation', ['showPostButton' => true])
 
@@ -76,7 +76,7 @@
 
         <!-- Feed -->
         <ol class="border-pixl-light/10 border-t pt-4">
-            <!-- Feed item -->
+            <!-- Posts -->
             @foreach($posts as $item)
                 <x-post
                     :post="$item->isRepost() && $item->content == null ? $item->repostOf : $item"
@@ -84,7 +84,6 @@
                     :show-replies="true"
                 />
             @endforeach
-            <!-- More feed items... -->
         </ol>
 
         <footer class="mt-30 ml-14">
