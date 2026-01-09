@@ -1,3 +1,7 @@
+@if ($post->parent_id !== null)
+    <a href="{{ route('posts.show', ['profile' => $post->parent->profile, 'post' => $post->parent]) }}">Back</a>
+@endif
+
 <li class="flex items-start gap-4 not-first:pt-2.5">
     <a href="{{ route('profiles.show', $post->profile) }}" class="shrink-0">
         <img
@@ -11,12 +15,15 @@
             <div class="flex items-center justify-between gap-4">
                 <div class="flex items-center gap-2.5">
                     <p><a class="hover:underline"
-                          href="{{ route('profiles.show', $post->profile) }}"> {{ $post->profile->display_name }}</a></p>
-                    <p class="text-pixl-light/40 text-xs"> {{ $post->created_at }}</p>
+                          href="{{ route('profiles.show', $post->profile) }}"> {{ $post->profile->display_name }}</a>
+                    </p>
+                    <p class="text-pixl-light/40 text-xs">
+                        <a href="{{ route('posts.show', [$post->profile, $post]) }}">{{ $post->created_at }}</a>
+                    </p>
                     <p>
                         <a
                             class="text-pixl-light/40 hover:text-pixl-light/60 text-xs"
-                            href="{{ route('profiles.show', $post->profile) }}">{{ $post->profile->handle }}</a>
+                        href="{{ route('profiles.show', $post->profile) }}">{{ $post->profile->handle }}</a>
                     </p>
                 </div>
                 <button
@@ -234,11 +241,11 @@
         </div>
 
         <!-- Threaded replies -->
-        @if ($showReplies && $post->relationLoaded('replies'))
+        @if ($showReplies)
             <ol>
                 <!-- Reply -->
                 @foreach($post->replies as $reply)
-                    <x-reply :post="$reply"/>
+                    <x-reply :post="$reply" :show-engagement="$showEngagement" :show-replies="$showReplies"/>
                 @endforeach
                 <!-- More replies... -->
             </ol>
