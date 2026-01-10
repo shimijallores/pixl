@@ -30,6 +30,7 @@ Route::get('/dev/logout', function () {
 
 Route::middleware(['auth'])->group(function () {
    Route::get('/home', [PostController::class, 'index'])->name('posts.index');
+   Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 });
 
 Route::get('/feed', function () {
