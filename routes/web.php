@@ -21,7 +21,7 @@ Route::get('/dev/logout', function () {
     request()->session()->invalidate();
     request()->session()->regenerateToken();
 
-    return redirect()->intended('/feed');
+    return redirect()->intended('/home');
 });
 
 Route::middleware(['auth'])->group(function () {
