@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
+use App\Models\Like;
 use App\Models\Post;
 use App\Models\Profile;
 use App\Queries\TimelineQuery;
@@ -19,7 +20,7 @@ class PostController extends Controller
 
         $posts = TimelineQuery::forViewer($profile)->get();
 
-        return view('posts.index', compact('profile','posts'));
+        return view('posts.index', compact('profile', 'posts'));
     }
 
     /**
@@ -60,5 +61,32 @@ class PostController extends Controller
         $post = Post::reply($currentProfile, $post, $request->content);
 
         return redirect()->intended(route('posts.index'));
+    }
+
+    public function repost(Profile $profile, Post $post)
+    {
+        $currentProfile = Auth::user()->profile;
+
+        $post = Post::repost($currentProfile, $post);
+
+        return redirect()->intended(route('posts.index'));
+    }
+
+    public function quote(Profile $profile, Post $post, CreatePostRequest $request)
+    {
+        $currentProfile = Auth::user()->profile;
+
+        $post = Post::repost($currentProfile, $post, $request->content);
+
+        return redirect()->intended(route('posts.index'));
+    }
+
+    public function like(Profile $profile, Post $post, CreatePostRequest $request)
+    {
+        $currentProfile = Auth::user()->profile;
+
+        $like = Like::createLike($currentProfile, $post);
+
+        return response()->json(compact('like'));
     }
 }
