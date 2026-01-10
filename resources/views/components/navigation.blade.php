@@ -1,4 +1,3 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
 <header
     class="my-4 hidden w-48 shrink-0 flex-col justify-between gap-8 pl-4 sm:flex xl:ml-32">
     <div class="overflow-y-auto">
@@ -68,17 +67,17 @@
             </button>
             @endif
             <!-- User controls -->
-            @if (Auth::check())
+            @if ($loggedIn)
                 <div class="flex gap-3.5">
-                    <a href="{{ route('profiles.show', Auth::user()->profile) }}" class="shrink-0">
+                    <a href="{{ route('profiles.show', $profile) }}" class="shrink-0">
                         <img
-                            src="{{ Auth::user()->profile->avatar_url }}"
-                            alt="Avatar for{{ Auth::user()->profile->display_name }}"
+                            src="{{ $profile->avatar_url }}"
+                            alt="Avatar for{{ $profile->display_name }}"
                             class="size-11 object-cover"/>
                     </a>
                     <div class="flex flex-col gap-1 text-sm">
-                        <p>{{ Auth::user()->profile->display_name }}</p>
-                        <p class="text-pixl-light/60">{{ Auth::user()->profile->handle }}</p>
+                        <p>{{ $profile->display_name }}</p>
+                        <p class="text-pixl-light/60">{{ $profile->handle }}</p>
                     </div>
                     <button class="group flex gap-[3px] py-2" aria-label="Post options">
                         <span class="bg-pixl-light/40 group-hover:bg-pixl-light/60 size-1"></span>
