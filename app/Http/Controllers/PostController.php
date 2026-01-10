@@ -6,7 +6,6 @@ use App\Http\Requests\CreatePostRequest;
 use App\Models\Post;
 use App\Models\Profile;
 use App\Queries\TimelineQuery;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -52,5 +51,14 @@ class PostController extends Controller
         $post = Post::publish($profile, $request->content);
 
         return redirect(route('posts.index'));
+    }
+
+    public function reply(Profile $profile, Post $post, CreatePostRequest $request)
+    {
+        $currentProfile = Auth::user()->profile;
+
+        $post = Post::reply($currentProfile, $post, $request->content);
+
+        return redirect()->intended(route('posts.index'));
     }
 }

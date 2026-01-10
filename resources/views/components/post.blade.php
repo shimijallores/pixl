@@ -50,6 +50,8 @@
                         />
                     </ul>
                 @endif
+
+                <x-reply-form :post="$post" />
             </div>
             <!-- Action buttons -->
             @if ($showEngagement)

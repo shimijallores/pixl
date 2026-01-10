@@ -19,27 +19,13 @@
         </div>
 
         <!-- Post prompt -->
-        <div
-            class="border-pixl-light/10 mt-8 flex items-start gap-4 border-b pb-4">
-            <a href="{{ route('profiles.show', $profile) }}" class="shrink-0">
-                <img
-                    src="{{ $profile->avatar_url }}"
-                    alt="Avatar for {{ $profile->display_name }}"
-                    class="size-10 object-cover"/>
-            </a>
-            <x-post-form
-                :label="'Post Body'"
-                :field-name="'content'"
-                :placeholder="'What\'s up' . $profile->handle . '?'"
-                :action="route('posts.store')"
-            />
-        </div>
+        <x-post-form />
 
         <!-- Feed -->
         <ol class="mt-4">
             <!-- Feed item -->
             @foreach($posts as $post)
-                <x-post :post="$post" />
+                <x-post :post="$post"/>
             @endforeach
             <!-- More feed items... -->
         </ol>
