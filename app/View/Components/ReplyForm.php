@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
+use App\Models\Post;
 use App\Models\Profile;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
-use App\Models\Post;
 
 class ReplyForm extends Component
 {

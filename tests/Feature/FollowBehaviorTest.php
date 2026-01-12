@@ -1,19 +1,19 @@
 <?php
 
-use App\Models\Profile;
 use App\Models\Follow;
+use App\Models\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('profile cannot follow itself', function () {
+test('profile cannot follow itself', function (): void {
     $profile = Profile::factory()->create();
 
-    expect(fn() => Follow::createFollow($profile, $profile))
+    expect(fn (): \App\Models\Follow => Follow::createFollow($profile, $profile))
         ->toThrow(InvalidArgumentException::class, 'A profile cannot follow itself.');
 });
 
-test('profile can follow another profile', function () {
+test('profile can follow another profile', function (): void {
     $follower = Profile::factory()->create();
     $following = Profile::factory()->create();
 
@@ -23,7 +23,7 @@ test('profile can follow another profile', function () {
         ->and($follower->following->contains($following))->toBeTrue();
 });
 
-test('profile can remove a follow', function () {
+test('profile can remove a follow', function (): void {
     $follower = Profile::factory()->create();
     $following = Profile::factory()->create();
 
@@ -35,4 +35,3 @@ test('profile can remove a follow', function () {
         ->and($success)->toBeTrue()
         ->and($follow->fresh())->toBeNull();
 });
-

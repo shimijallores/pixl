@@ -6,10 +6,10 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('allows a profile to publish a post', function () {
+test('allows a profile to publish a post', function (): void {
     $profile = Profile::factory()->create();
 
-    $post = Post::publish($profile, "Lorem Ipsum");
+    $post = Post::publish($profile, 'Lorem Ipsum');
 
     expect($post->exists)->toBeTrue()
         ->and($post->profile->is($profile))->toBeTrue()
@@ -17,7 +17,7 @@ test('allows a profile to publish a post', function () {
         ->and($post->reply_of_id)->toBeNull();
 });
 
-test('can reply to post', function () {
+test('can reply to post', function (): void {
     $original = Post::factory()->create();
 
     $replier = Profile::factory()->create();
@@ -27,7 +27,7 @@ test('can reply to post', function () {
         ->and($original->replies)->toHaveCount(1);
 });
 
-test('can have many replies', function () {
+test('can have many replies', function (): void {
     $original = Post::factory()->create();
     $replies = Post::factory(5)->reply($original)->create();
 
@@ -36,7 +36,7 @@ test('can have many replies', function () {
         ->and($original->replies->contains($replies->first()))->toBeTrue();
 });
 
-test('create basic repost', function () {
+test('create basic repost', function (): void {
     $original = Post::factory()->create();
 
     $reposter = Profile::factory()->create();
@@ -47,7 +47,7 @@ test('create basic repost', function () {
         ->and($repost->content)->toBeNull();
 });
 
-test('create quote repost', function () {
+test('create quote repost', function (): void {
     $original = Post::factory()->create();
     $content = 'content';
 
@@ -59,8 +59,7 @@ test('create quote repost', function () {
         ->and($repost->content)->toBe('content');
 });
 
-
-test('can have many reposts', function () {
+test('can have many reposts', function (): void {
     $original = Post::factory()->create();
     $reposts = Post::factory(5)->repost($original)->create();
 
@@ -69,17 +68,17 @@ test('can have many reposts', function () {
         ->and($original->reposts->contains($reposts->first()))->toBeTrue();
 });
 
-test('prevent duplicate repost', function () {
-   $original = Post::factory()->create();
-   $profile = Profile::factory()->create();
+test('prevent duplicate repost', function (): void {
+    $original = Post::factory()->create();
+    $profile = Profile::factory()->create();
 
-   $r1 = Post::repost($profile, $original);
-   $r2 = Post::repost($profile, $original);
+    $post = Post::repost($profile, $original);
+    $r2 = Post::repost($profile, $original);
 
-   expect($r1->id)->toBe($r2->id);
+    expect($post->id)->toBe($r2->id);
 });
 
-test('can remove a repost', function () {
+test('can remove a repost', function (): void {
     $original = Post::factory()->create();
     $profile = Post::factory()->repost($original)->create()->profile;
 
@@ -89,4 +88,3 @@ test('can remove a repost', function () {
         ->and($success)->toBeTrue();
 
 });
-

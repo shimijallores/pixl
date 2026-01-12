@@ -17,7 +17,7 @@ class ProfileFactory extends Factory
      */
     public function definition(): array
     {
-        $handle =  $this->faker->unique()->userName();
+        $handle = $this->faker->unique()->userName();
 
         return [
             'user_id' => User::factory(),
@@ -25,7 +25,7 @@ class ProfileFactory extends Factory
             'handle' => $handle,
             'bio' => $this->faker->sentences(3, true),
             'avatar_url' => 'https://dummyimage.com/90x90/eee/000',
-            'cover_url' => 'https://dummyimage.com/1400x640/555/ECA749?text=' . $handle,
+            'cover_url' => 'https://dummyimage.com/1400x640/555/ECA749?text='.$handle,
         ];
     }
 }

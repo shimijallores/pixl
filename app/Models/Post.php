@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class Post extends Model
 {
@@ -60,12 +61,12 @@ class Post extends Model
         ]);
     }
 
-    public static function reply(Profile $replier, Post $original, $content): self
+    public static function reply(Profile $profile, Post $post, $content): self
     {
         return static::create([
-            'profile_id' => $replier->id,
+            'profile_id' => $profile->id,
             'content' => $content,
-            'parent_id' => $original->id,
+            'parent_id' => $post->id,
             'repost_of_id' => null,
         ]);
     }
@@ -75,20 +76,20 @@ class Post extends Model
         return $this->repost_of_id !== null;
     }
 
-    public static function repost(Profile $reposter, Post $original, string $content = null): self
+    public static function repost(Profile $profile, Post $post, ?string $content = null): self
     {
         return static::firstOrCreate([
-            'profile_id' => $reposter->id,
+            'profile_id' => $profile->id,
             'content' => $content,
             'parent_id' => null,
-            'repost_of_id' => $original->id,
+            'repost_of_id' => $post->id,
         ]);
     }
 
-    public static function removeRepost(Profile $profile, Post $original): bool
+    public static function removeRepost(Profile $profile, Post $post): bool
     {
         return static::where('profile_id', $profile->id)
-            ->where('repost_of_id', $original->id)
+            ->where('repost_of_id', $post->id)
             ->delete() > 0;
     }
 }

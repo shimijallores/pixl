@@ -1,55 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Queries;
 
 use App\Models\Post;
 use App\Models\Profile;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostThreadQuery
 {
-    public function __construct(private Post $post, private ?Profile $viewer)
-    {
+    public function __construct(private Post $post, private ?Profile $profile) {}
 
-    }
-
-    public static function for(Post $post, ?Profile $viewer): self
+    public static function for(Post $post, ?Profile $profile): self
     {
-        return new self($post, $viewer);
+        return new self($post, $profile);
     }
 
     // Holy fuckk what is this
     public function load(): Post
     {
-        $viewerId = $this->viewer?->id ?? 0;
+        $viewerId = $this->profile?->id ?? 0;
 
         $this->post->load([
-            'replies' => fn($q) => $q
+            'replies' => fn ($q) => $q
                 ->withCount(['likes', 'replies', 'reposts'])
                 ->withExists([
-                    'likes as has_liked' => fn($q) => $q->where('profile_id', $viewerId),
-                    'reposts as has_reposted' => fn($q) => $q->where('profile_id', $viewerId),
+                    'likes as has_liked' => fn ($q) => $q->where('profile_id', $viewerId),
+                    'reposts as has_reposted' => fn ($q) => $q->where('profile_id', $viewerId),
                 ])
                 ->with([
                     'profile',
                     'parent.profile',
-                    'replies' => fn($q) => $q
+                    'replies' => fn ($q) => $q
                         ->withCount(['likes', 'replies', 'reposts'])
                         ->withExists([
-                            'likes as has_liked' => fn($q) => $q->where('profile_id', $viewerId),
-                            'reposts as has_reposted' => fn($q) => $q->where('profile_id', $viewerId),
+                            'likes as has_liked' => fn ($q) => $q->where('profile_id', $viewerId),
+                            'reposts as has_reposted' => fn ($q) => $q->where('profile_id', $viewerId),
                         ])
                         ->with(['profile', 'parent.profile'])
-                        ->oldest()
+                        ->oldest(),
                 ])
-                ->oldest()
+                ->oldest(),
         ])->loadCount(['likes', 'replies', 'reposts'])
-        ->loadExists([
-            'likes as has_liked' => fn($q) => $q->where('profile_id', $viewerId),
-            'reposts as has_reposted' => fn($q) => $q->where('profile_id', $viewerId),
-        ]);
+            ->loadExists([
+                'likes as has_liked' => fn ($q) => $q->where('profile_id', $viewerId),
+                'reposts as has_reposted' => fn ($q) => $q->where('profile_id', $viewerId),
+            ]);
 
         return $this->post;
     }
